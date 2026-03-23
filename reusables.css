@@ -1,0 +1,21 @@
+
+.w-1 {
+    width: 1rem;
+}
+.w-2 {
+    width: 2rem;
+}
+.w-5 {
+    width: 5rem;
+}
+.mt-2 {
+    margin-top: 2rem;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
