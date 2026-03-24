@@ -74,6 +74,14 @@ p {
     aspect-ratio: 1/1;
     background-color: var(--color-bg);
 }
+.page-ad {
+    width: 80%;
+    aspect-ratio: 9/2;
+    border-top-width: 0px;
+    margin-top: 1rem;
+    overflow: hidden;
+    user-select: none;
+}
 .page-banner {
     width: 80%;
     aspect-ratio: 9/3;
