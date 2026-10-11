@@ -4,16 +4,19 @@ import { loadTemp } from "./renderer.js";
 let eventListeners = []
 
 // General Variables
-let isBana = false;
 let lastLocation = "home";
 const pageView = document.getElementById("pageView");
 const searchBtn = document.getElementById("searchBtn");
 const urlInput = document.getElementById("pageUrlInput");
+const currentUrl = new URL(window.location.href);
+
+let didInteract = false;
+let isBana = false;
 
 // Log error yeah
 const logError = (error_msg) => {
     const errorElement = document.getElementById("errorLogEl");
-    errorElement.innerHTML = error_msg;
+    errorElement.textContent = error_msg;
 };
 // Load the temp html files but shorter lmao
 const loadTempText = async (html_name_string) => {
@@ -31,9 +34,7 @@ const loadTempText = async (html_name_string) => {
         lastLocation = html_name_string;
         urlInput.value = html_name_string;
 
-        const url = new URL(window.location.href);
-        url.searchParams.set('page', html_name_string);
-        window.history.pushState({}, '', url);
+        currentUrl.searchParams.set('page', html_name_string);
     });
 
     return didError;
@@ -45,14 +46,19 @@ const unloadListeners = () => {
     eventListeners = [];
 };
 // Literally just goes to a url
-const urlGoerFromInput = () => {
+const urlGoerFromInput = async () => {
     if (lastLocation == urlInput.value) {
         console.log("Don't refetch man, without chaging the location input.")
         return;  
     }
 
     unloadListeners();
-    loadTempText(urlInput.value);
+    const didError = await loadTempText(urlInput.value);
+
+    if (didError) {
+        await loadTempText("404");
+    }
+    window.history.pushState({}, '', currentUrl);
 };
 const urlGoerFromParam = async () => {
     const url = new URL(window.location.href);
@@ -64,13 +70,14 @@ const urlGoerFromParam = async () => {
         const didError = await loadTempText(page);
 
         if (didError) {
-            loadTempText("404");
+            await loadTempText("404");
         }
     } else {
         unloadListeners();
-        loadTempText("home");
+        await loadTempText("home");
     }
 
+    window.history.pushState({}, '', currentUrl);
     return;
 };
 
